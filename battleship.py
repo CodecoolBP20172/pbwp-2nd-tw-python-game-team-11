@@ -2,10 +2,12 @@ import sys
 import getpass
 import random
 from random import randint
+import time
 
 
-def b_start(multiplayer = True):
+def b_start(multiplayer=True):
     column_names = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
+    row_names = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
     directions = ["h", "v"]
     Rows = 10
     Columns = 10
@@ -132,83 +134,87 @@ def b_start(multiplayer = True):
 
     def ship_placement_human(shiptype):  # ship placement
         while True:
-            try:  # exit during placement, see below at except
-                ship_x = getpass.getpass("Please select a column for "+shiptype+": ").upper()
-                column_index = column_names.index(ship_x)
-                if ship_x not in column_names:
-                    print("Invalid position! Please try again!")
-                    continue
-                ship_y = getpass.getpass("Please select a row for "+shiptype+": ")
-                if int(ship_y) < 1 or int(ship_y) > 10:
-                    print("Invalid position! Please try again!")
-                    continue
+            ship_x = getpass.getpass("Please select a column for "+shiptype+": ").upper()
+            if ship_x not in column_names:
+                quit_question = input("Are you sure you want to quit?\n").lower()
+                if quit_question == "yes":
+                    sys.exit()
+                print("Invalid position! Please try again!")
+                continue
+            column_index = column_names.index(ship_x)
+            ship_y = getpass.getpass("Please select a row for "+shiptype+": ")
+            if ship_y not in row_names:
+                quit_question = input("Are you sure you want to quit?\n").lower()
+                if quit_question == "yes":
+                    sys.exit()
+                print("Invalid position! Please try again!")
+                continue
+            direction = getpass.getpass("[H]orizontal or [V]ertical?").lower()
+            while direction not in directions:
+                print("Please enter a valid direction!")
                 direction = getpass.getpass("[H]orizontal or [V]ertical?").lower()
-                while direction not in directions:
-                    print("Please enter a valid direction!")
-                    direction = getpass.getpass("[H]orizontal or [V]ertical?").lower()
-                if shiptype == "destroyer":
-                    if ship_x not in column_names[0:9] and direction == "h" or int(ship_y) > 9 and direction == "v":
-                        print("No room for your ship there! Please replace!")
-                        continue
-                    elif direction == "v":
-                        ship = [ship_x + ship_y, ship_x + str(int(ship_y) + 1)]
-                        return ship
-                    elif direction == "h":
-                        ship = [ship_x + ship_y, column_names[(column_index+1)] + ship_y]
-                        return ship
-                if shiptype == "cruiser" or shiptype == "submarine":
-                    if ship_x not in column_names[0:8] and direction == "h" or int(ship_y) > 8 and direction == "v":
-                        print("No room for your ship there! Please replace!")
-                        continue
-                    elif direction == "v":
-                        ship = [ship_x + ship_y,
-                                ship_x + str(int(ship_y) + 1),
-                                ship_x + str(int(ship_y) + 2)]
-                        return ship
-                    elif direction == "h":
-                        ship = [ship_x + ship_y,
-                                column_names[(column_index+1)] + ship_y,
-                                column_names[(column_index+2)] + ship_y]
-                        return ship
-                if shiptype == "battleship":
-                    if ship_x not in column_names[0:7] and direction == "h" or int(ship_y) > 7 and direction == "v":
-                        print("No room for your ship there! Please replace!")
-                        continue
-                    elif direction == "v":
-                        ship = [ship_x + ship_y,
-                                ship_x + str(int(ship_y) + 1),
-                                ship_x + str(int(ship_y) + 2),
-                                ship_x + str(int(ship_y) + 3)]
-                        return ship
-                    elif direction == "h":
-                        ship = [ship_x + ship_y,
-                                column_names[(column_index+1)] + ship_y,
-                                column_names[(column_index+2)] + ship_y,
-                                column_names[(column_index+3)] + ship_y]
-                        return ship
-                if shiptype == "carrier":
-                    if ship_x not in column_names[0:6] and direction == "h" or int(ship_y) > 6 and direction == "v":
-                        print("No room for your ship there! Please replace!")
-                        continue
-                    elif direction == "v":
-                        ship = [ship_x + ship_y,
-                                ship_x + str(int(ship_y) + 1),
-                                ship_x + str(int(ship_y) + 2),
-                                ship_x + str(int(ship_y) + 3),
-                                ship_x + str(int(ship_y) + 4)]
-                        return ship
-                    elif direction == "h":
-                        ship = [ship_x + ship_y,
-                                column_names[(column_index+1)] + ship_y,
-                                column_names[(column_index+2)] + ship_y,
-                                column_names[(column_index+3)] + ship_y,
-                                column_names[(column_index+4)] + ship_y]
-                        return ship
-            except BaseException:
-                sys.exit("Program stopped")
+            if shiptype == "destroyer":
+                if ship_x not in column_names[0:9] and direction == "h" or int(ship_y) > 9 and direction == "v":
+                    print("No room for your ship there! Please replace!")
+                    continue
+                elif direction == "v":
+                    ship = [ship_x + ship_y, ship_x + str(int(ship_y) + 1)]
+                    return ship
+                elif direction == "h":
+                    ship = [ship_x + ship_y, column_names[(column_index+1)] + ship_y]
+                    return ship
+            if shiptype == "cruiser" or shiptype == "submarine":
+                if ship_x not in column_names[0:8] and direction == "h" or int(ship_y) > 8 and direction == "v":
+                    print("No room for your ship there! Please replace!")
+                    continue
+                elif direction == "v":
+                    ship = [ship_x + ship_y,
+                            ship_x + str(int(ship_y) + 1),
+                            ship_x + str(int(ship_y) + 2)]
+                    return ship
+                elif direction == "h":
+                    ship = [ship_x + ship_y,
+                            column_names[(column_index+1)] + ship_y,
+                            column_names[(column_index+2)] + ship_y]
+                    return ship
+            if shiptype == "battleship":
+                if ship_x not in column_names[0:7] and direction == "h" or int(ship_y) > 7 and direction == "v":
+                    print("No room for your ship there! Please replace!")
+                    continue
+                elif direction == "v":
+                    ship = [ship_x + ship_y,
+                            ship_x + str(int(ship_y) + 1),
+                            ship_x + str(int(ship_y) + 2),
+                            ship_x + str(int(ship_y) + 3)]
+                    return ship
+                elif direction == "h":
+                    ship = [ship_x + ship_y,
+                            column_names[(column_index+1)] + ship_y,
+                            column_names[(column_index+2)] + ship_y,
+                            column_names[(column_index+3)] + ship_y]
+                    return ship
+            if shiptype == "carrier":
+                if ship_x not in column_names[0:6] and direction == "h" or int(ship_y) > 6 and direction == "v":
+                    print("No room for your ship there! Please replace!")
+                    continue
+                elif direction == "v":
+                    ship = [ship_x + ship_y,
+                            ship_x + str(int(ship_y) + 1),
+                            ship_x + str(int(ship_y) + 2),
+                            ship_x + str(int(ship_y) + 3),
+                            ship_x + str(int(ship_y) + 4)]
+                    return ship
+                elif direction == "h":
+                    ship = [ship_x + ship_y,
+                            column_names[(column_index+1)] + ship_y,
+                            column_names[(column_index+2)] + ship_y,
+                            column_names[(column_index+3)] + ship_y,
+                            column_names[(column_index+4)] + ship_y]
+                    return ship
+
 
     def shipcheck(ai=False):  # checking if ships are placed proper and puts coordinates in a list
-        if ai == True:
+        if ai is True:
             ship1 = ship_placement_AI("destroyer")
             ship2 = ship_placement_AI("cruiser")
             while bool(set(ship1) & set(ship2)):
@@ -230,7 +236,7 @@ def b_start(multiplayer = True):
                 ship5 = ship_placement_AI("carrier")
             ships = [ship1, ship2, ship3, ship4, ship5]
             return ships
-        if ai == False:
+        if ai is False:
             ship1 = ship_placement_human("destroyer")
             ship2 = ship_placement_human("cruiser")
             while bool(set(ship1) & set(ship2)):
@@ -257,91 +263,101 @@ def b_start(multiplayer = True):
             ships = [ship1, ship2, ship3, ship4, ship5]
             return ships
 
-    if multiplayer == True:
+    if multiplayer is True:
         print("Player 1 place your ships!")
         p1_ships = shipcheck()
         print("Player 2 place your ships!")
         p2_ships = shipcheck()
 
         player = 1  # battle phase
-        while True:
-            # checks quesses of p1
-            while player == 1:
-                print("\nPLAYER 01:")
-                guess_column = input("Which column do you guess? \n").upper()
-                if guess_column not in column_names:
+        while player == 1:
+            print("\nPLAYER 01:")
+            guess_column = input("Which column do you guess? \n").upper()
+            if guess_column not in column_names:
+                quit_question = input("Are you sure you want to quit?\n").lower()
+                if quit_question == "yes":
                     sys.exit()
-                guess_row = input("Which row do you guess? \n")
-                try:
-                    t = int(guess_row)
-                except BaseException:
-                    sys.exit("Program ended")
-                guess = [guess_column + guess_row]
+                else:
+                    continue
+            guess_row = input("Which row do you guess? \n")
+            if guess_row not in row_names:
+                quit_question = input("Are you sure you want to quit?\n").lower()
+                if quit_question == "yes":
+                    sys.exit()
+                else:
+                    continue
+            guess = [guess_column + guess_row]
 
-                if bool(
-                    set(guess) & set(
-                        p2_ships[0]) or set(guess) & set(
-                        p2_ships[1]) or set(guess) & set(
-                        p2_ships[2]) or set(guess) & set(
-                        p2_ships[3]) or set(guess) & set(
-                        p2_ships[4])):
-                    if (grid_p2[int(guess_row) - 1][column_names.index(guess_column) ] == "O"):
-                        print("You guessed that already!")
-                    else:
-                        update_gridHit_p2(grid_p2, guess_row, guess_column)
-                        display_grid_p2(grid_p2, Columns)
-                        print("You've hit an enemy vessel!")
-                        p1_score += 1
-                        if p1_score == 17:
-                            print("\n" +
-                                  "               )\n" +
-                                  "            ( /(       )\n" +
-                                  "            )\())(  ( /(\n" +
-                                  "           ((_)\ )\ )\())\n" +
-                                  "             ((_|(_|_))/\n" +
-                                  "            | ¤   ¤   ¤ | __\n" +
-                                  "    \----|----------------||--/\n" +
-                                  "     \   o   o   o   o   o   /\n" +
-                                  "\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n" +
-                                  "\nPlayer 1, you are victorious!\nCongratulations!")
-                            sys.exit("Program ended")
-                        player = 2
+            if bool(
+                set(guess) & set(
+                    p2_ships[0]) or set(guess) & set(
+                    p2_ships[1]) or set(guess) & set(
+                    p2_ships[2]) or set(guess) & set(
+                    p2_ships[3]) or set(guess) & set(
+                    p2_ships[4])):
+                if (grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == "O"):
+                    print("You guessed that already!")
+                else:
+                    update_gridHit_p2(grid_p2, guess_row, guess_column)
+                    display_grid_p2(grid_p2, Columns)
+                    print("You've hit an enemy vessel!")
+                    p1_score += 1
+                    if p1_score == 17:
+                        print("\n" +
+                              "               )\n" +
+                              "            ( /(       )\n" +
+                              "            )\())(  ( /(\n" +
+                              "           ((_)\ )\ )\())\n" +
+                              "             ((_|(_|_))/\n" +
+                              "            | ¤   ¤   ¤ | __\n" +
+                              "    \----|----------------||--/\n" +
+                              "     \   o   o   o   o   o   /\n" +
+                              "\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n" +
+                              "\nPlayer 1, you are victorious!\nCongratulations!")
+                        sys.exit("Program ended")
+                    player = 2
+
+            else:
+                if (int(guess_row) < 0 or int(guess_row) > int(Rows)) or guess_column not in column_names:
+                    print("Outside the set grid. Please pick a number within it your Rows and Columns.")
+
+                elif (grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == "X"):
+                    print("You guessed that already.")
 
                 else:
-                    if (int(guess_row) < 0 or int(guess_row) > int(Rows)) or guess_column not in column_names:
-                        print("Outside the set grid. Please pick a number within it your Rows and Columns.")
-
-                    elif (grid_p2[int(guess_row) - 1][column_names.index(guess_column) ] == "X"):
-                        print("You guessed that already.")
-
-                    else:
-                        # Updates the grid with an "X" saying that you missed the ship
-                        print("You missed!")
-                        update_gridMiss_p2(grid_p2, guess_row, guess_column)
-                        display_grid_p2(grid_p2, Columns)
-                        player = 2
+                    # Updates the grid with an "X" saying that you missed the ship
+                    print("You missed!")
+                    update_gridMiss_p2(grid_p2, guess_row, guess_column)
+                    display_grid_p2(grid_p2, Columns)
+                    player = 2
 
             # checks quesses of p1
             while player == 2:
                 print("\nPLAYER 02:")
                 guess_column = input("Which column do you guess? \n").upper()
                 if guess_column not in column_names:
-                    sys.exit()
+                    quit_question = input("Are you sure you want to quit?\n").lower()
+                    if quit_question == "yes":
+                        sys.exit()
+                    else:
+                        continue
                 guess_row = input("Which row do you guess? \n")
-                try:
-                    t = int(guess_row)
-                except BaseException:
-                    sys.exit("Program ended")
+                if guess_row not in row_names:
+                    quit_question = input("Are you sure you want to quit?\n").lower()
+                    if quit_question == "yes":
+                        sys.exit()
+                    else:
+                        continue
                 guess = [guess_column + guess_row]
 
                 if bool(
                     set(guess) & set(
-                        p2_ships[0]) or set(guess) & set(
-                        p2_ships[1]) or set(guess) & set(
-                        p2_ships[2]) or set(guess) & set(
-                        p2_ships[3]) or set(guess) & set(
-                        p2_ships[4])):
-                    if (grid_p1[int(guess_row) - 1][column_names.index(guess_column) ] == "O"):
+                        p1_ships[0]) or set(guess) & set(
+                        p1_ships[1]) or set(guess) & set(
+                        p1_ships[2]) or set(guess) & set(
+                        p1_ships[3]) or set(guess) & set(
+                        p1_ships[4])):
+                    if (grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == "O"):
                         print("You guessed that already!")
                     else:
                         update_gridHit_p1(grid_p1, guess_row, guess_column)
@@ -377,7 +393,7 @@ def b_start(multiplayer = True):
                         display_grid_p1(grid_p1, Columns)
                         player = 1
 
-    if multiplayer == False:
+    if multiplayer is False:
         print("Player 1 place your ships!")
         p1_ships = shipcheck()
         p2_ships = shipcheck(True)
@@ -389,12 +405,18 @@ def b_start(multiplayer = True):
                 print("\nPLAYER 01:")
                 guess_column = input("Which column do you guess? \n").upper()
                 if guess_column not in column_names:
-                    sys.exit()
-                guess_row = input("Which row do you guess? \n")
-                try:
-                    t = int(guess_row)
-                except BaseException:
-                    sys.exit("Program ended")
+                    quit_question = input("Are you sure you want to quit?\n").lower()
+                    if quit_question == "yes":
+                        sys.exit()
+                    else:
+                        continue
+                guess_row = input("Which row do you guess? \n").upper()
+                if guess_row not in row_names:
+                    quit_question = input("Are you sure you want to quit?\n")
+                    if quit_question == "Yes":
+                        sys.exit()
+                    else:
+                        continue
                 guess = [guess_column + guess_row]
 
                 if bool(
@@ -404,7 +426,7 @@ def b_start(multiplayer = True):
                         p2_ships[2]) or set(guess) & set(
                         p2_ships[3]) or set(guess) & set(
                         p2_ships[4])):
-                    if (grid_p2[int(guess_row) - 1][column_names.index(guess_column) ] == "O"):
+                    if (grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == "O"):
                         print("You guessed that already!")
                     else:
                         update_gridHit_p2(grid_p2, guess_row, guess_column)
@@ -430,7 +452,7 @@ def b_start(multiplayer = True):
                     if (int(guess_row) < 0 or int(guess_row) > int(Rows)) or guess_column not in column_names:
                         print("Outside the set grid. Please pick a number within it your Rows and Columns.")
 
-                    elif (grid_p2[int(guess_row) - 1][column_names.index(guess_column) ] == "X"):
+                    elif (grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == "X"):
                         print("You guessed that already.")
 
                     else:
@@ -442,6 +464,8 @@ def b_start(multiplayer = True):
 
             # checks quesses of p1
             while player == 2:
+                print("Artificial Unintelligence is thinking...")
+                time.sleep(1)
                 guess_column = random.choice(column_names)
                 if guess_column not in column_names:
                     sys.exit()
@@ -450,12 +474,12 @@ def b_start(multiplayer = True):
 
                 if bool(
                     set(guess) & set(
-                        p2_ships[0]) or set(guess) & set(
-                        p2_ships[1]) or set(guess) & set(
-                        p2_ships[2]) or set(guess) & set(
-                        p2_ships[3]) or set(guess) & set(
-                        p2_ships[4])):
-                    if (grid_p1[int(guess_row) - 1][column_names.index(guess_column) ] == "O"):
+                        p1_ships[0]) or set(guess) & set(
+                        p1_ships[1]) or set(guess) & set(
+                        p1_ships[2]) or set(guess) & set(
+                        p1_ships[3]) or set(guess) & set(
+                        p1_ships[4])):
+                    if (grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == "O"):
                         continue
                     else:
                         update_gridHit_p1(grid_p1, guess_row, guess_column)
@@ -506,7 +530,7 @@ def game_init():
     while True:
         start = input("\nPress P to play, H for help or Q to exit!\n")
         if start.lower() == "p":
-            game_players = input("Single Player or Multiplayer?").lower()
+            game_players = input("[S]ingle Player or [M]ultiplayer?").lower()
             if game_players == "s":
                 b_start(False)
             elif game_players == "m":
