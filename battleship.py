@@ -1,9 +1,10 @@
 import sys
 import getpass
 import random
+from random import randint
 
 
-def b_start():
+def b_start(multiplayer = True):
     column_names = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
     directions = ["h", "v"]
     Rows = 10
@@ -68,17 +69,14 @@ def b_start():
     def update_gridMiss_p2(grid_p2, guess_row, guess_column):
         grid_p2[int(guess_row)-1][column_names.index(guess_column)] = 'X'
 
-    def ship_placement_singleplayer(shiptype):  # ship placement
+    def ship_placement_AI(shiptype):  # ship placement
         while True:
             ship_x = random.choice(column_names)
-            print(ship_x)
             column_index = column_names.index(ship_x)
             ship_y = str(randint(1, 10))
-            print(ship_y)
             direction = random.choice(directions)
             if shiptype == "destroyer":
                 if ship_x not in column_names[0:9] and direction == "h" or int(ship_y) > 9 and direction == "v":
-                    print("No room for your ship there! Please replace!")
                     continue
                 elif direction == "v":
                     ship = [ship_x + ship_y, ship_x + str(int(ship_y) + 1)]
@@ -88,7 +86,6 @@ def b_start():
                     return ship
             if shiptype == "cruiser" or shiptype == "submarine":
                 if ship_x not in column_names[0:8] and direction == "h" or int(ship_y) > 8 and direction == "v":
-                    print("No room for your ship there! Please replace!")
                     continue
                 elif direction == "v":
                     ship = [ship_x + ship_y,
@@ -102,7 +99,6 @@ def b_start():
                     return ship
             if shiptype == "battleship":
                 if ship_x not in column_names[0:7] and direction == "h" or int(ship_y) > 7 and direction == "v":
-                    print("No room for your ship there! Please replace!")
                     continue
                 elif direction == "v":
                     ship = [ship_x + ship_y,
@@ -118,7 +114,6 @@ def b_start():
                     return ship
             if shiptype == "carrier":
                 if ship_x not in column_names[0:6] and direction == "h" or int(ship_y) > 6 and direction == "v":
-                    print("No room for your ship there! Please replace!")
                     continue
                 elif direction == "v":
                     ship = [ship_x + ship_y,
@@ -135,7 +130,7 @@ def b_start():
                             column_names[(column_index+4)] + ship_y]
                     return ship
 
-    def ship_placement_multiplayer(shiptype):  # ship placement
+    def ship_placement_human(shiptype):  # ship placement
         while True:
             try:  # exit during placement, see below at except
                 ship_x = getpass.getpass("Please select a column for "+shiptype+": ").upper()
@@ -212,151 +207,284 @@ def b_start():
             except BaseException:
                 sys.exit("Program stopped")
 
-    def shipcheck():  # checking if ships are placed proper and puts coordinates in a list
-        ship1 = ship_placement_multiplayer("destroyer")
-        ship2 = ship_placement_multiplayer("cruiser")
-        while bool(set(ship1) & set(ship2)):
-            print("Ships cannot collide! Please replace your cruiser!")
-            ship2 = ship_placement_multiplayer("cruiser")
-        ship3 = ship_placement_multiplayer("submarine")
-        while bool(set(ship1) & set(ship2)) or bool(set(ship1) & set(ship3)) or bool(set(ship2) & set(ship3)):
-            print("Ships cannot collide! Please replace your submarine!")
-            ship3 = ship_placement_multiplayer("submarine")
-        ship4 = ship_placement_multiplayer("battleship")
-        while (bool(set(ship1) & set(ship2)) or bool(set(ship1) & set(ship3))
-               or bool(set(ship1) & set(ship4)) or bool(set(ship2) & set(ship3))
-               or bool(set(ship2) & set(ship4))or bool(set(ship3) & set(ship4))):
-            print("Ships cannot collide! Please replace your battleship!")
-            ship4 = ship_placement_multiplayer("battleship")
-        ship5 = ship_placement_multiplayer("carrier")
-        while (bool(set(ship1) & set(ship2)) or bool(set(ship1) & set(ship3))
-               or bool(set(ship1) & set(ship4)) or bool(set(ship2) & set(ship3))
-               or bool(set(ship2) & set(ship4)) or bool(set(ship3) & set(ship4))
-               or bool(set(ship5) & set(ship1)) or bool(set(ship5) & set(ship2))
-               or bool(set(ship5) & set(ship3)) or bool(set(ship5) & set(ship4))):
-            print("Ships cannot collide! Please replace your battleship!")
-            ship5 = ship_placement_multiplayer("carrier")
-        ships = [ship1, ship2, ship3, ship4, ship5]
-        return ships
+    def shipcheck(ai=False):  # checking if ships are placed proper and puts coordinates in a list
+        if ai == True:
+            ship1 = ship_placement_AI("destroyer")
+            ship2 = ship_placement_AI("cruiser")
+            while bool(set(ship1) & set(ship2)):
+                ship2 = ship_placement_AI("cruiser")
+            ship3 = ship_placement_AI("submarine")
+            while bool(set(ship1) & set(ship2)) or bool(set(ship1) & set(ship3)) or bool(set(ship2) & set(ship3)):
+                ship3 = ship_placement_AI("submarine")
+            ship4 = ship_placement_AI("battleship")
+            while (bool(set(ship1) & set(ship2)) or bool(set(ship1) & set(ship3))
+                   or bool(set(ship1) & set(ship4)) or bool(set(ship2) & set(ship3))
+                   or bool(set(ship2) & set(ship4))or bool(set(ship3) & set(ship4))):
+                ship4 = ship_placement_AI("battleship")
+            ship5 = ship_placement_AI("carrier")
+            while (bool(set(ship1) & set(ship2)) or bool(set(ship1) & set(ship3))
+                   or bool(set(ship1) & set(ship4)) or bool(set(ship2) & set(ship3))
+                   or bool(set(ship2) & set(ship4)) or bool(set(ship3) & set(ship4))
+                   or bool(set(ship5) & set(ship1)) or bool(set(ship5) & set(ship2))
+                   or bool(set(ship5) & set(ship3)) or bool(set(ship5) & set(ship4))):
+                ship5 = ship_placement_AI("carrier")
+            ships = [ship1, ship2, ship3, ship4, ship5]
+            return ships
+        if ai == False:
+            ship1 = ship_placement_human("destroyer")
+            ship2 = ship_placement_human("cruiser")
+            while bool(set(ship1) & set(ship2)):
+                print("Ships cannot collide! Please replace your cruiser!")
+                ship2 = ship_placement_human("cruiser")
+            ship3 = ship_placement_human("submarine")
+            while bool(set(ship1) & set(ship2)) or bool(set(ship1) & set(ship3)) or bool(set(ship2) & set(ship3)):
+                print("Ships cannot collide! Please replace your submarine!")
+                ship3 = ship_placement_human("submarine")
+            ship4 = ship_placement_human("battleship")
+            while (bool(set(ship1) & set(ship2)) or bool(set(ship1) & set(ship3))
+                   or bool(set(ship1) & set(ship4)) or bool(set(ship2) & set(ship3))
+                   or bool(set(ship2) & set(ship4))or bool(set(ship3) & set(ship4))):
+                print("Ships cannot collide! Please replace your battleship!")
+                ship4 = ship_placement_human("battleship")
+            ship5 = ship_placement_human("carrier")
+            while (bool(set(ship1) & set(ship2)) or bool(set(ship1) & set(ship3))
+                   or bool(set(ship1) & set(ship4)) or bool(set(ship2) & set(ship3))
+                   or bool(set(ship2) & set(ship4)) or bool(set(ship3) & set(ship4))
+                   or bool(set(ship5) & set(ship1)) or bool(set(ship5) & set(ship2))
+                   or bool(set(ship5) & set(ship3)) or bool(set(ship5) & set(ship4))):
+                print("Ships cannot collide! Please replace your battleship!")
+                ship5 = ship_placement_human("carrier")
+            ships = [ship1, ship2, ship3, ship4, ship5]
+            return ships
 
-    print("Player 1 place your ships!")
-    p1_ships = shipcheck()
-    print("Player 2 place your ships!")
-    p2_ships = shipcheck()
+    if multiplayer == True:
+        print("Player 1 place your ships!")
+        p1_ships = shipcheck()
+        print("Player 2 place your ships!")
+        p2_ships = shipcheck()
 
-    player = 1  # battle phase
-    while True:
-        # checks quesses of p1
-        while player == 1:
-            print("\nPLAYER 01:")
-            guess_column = input("Which column do you guess? \n").upper()
-            if guess_column not in column_names:
-                sys.exit()
-            guess_row = input("Which row do you guess? \n")
-            try:
-                t = int(guess_row)
-            except BaseException:
-                sys.exit("Program ended")
-            guess = [guess_column + guess_row]
+        player = 1  # battle phase
+        while True:
+            # checks quesses of p1
+            while player == 1:
+                print("\nPLAYER 01:")
+                guess_column = input("Which column do you guess? \n").upper()
+                if guess_column not in column_names:
+                    sys.exit()
+                guess_row = input("Which row do you guess? \n")
+                try:
+                    t = int(guess_row)
+                except BaseException:
+                    sys.exit("Program ended")
+                guess = [guess_column + guess_row]
 
-            if bool(
-                set(guess) & set(
-                    p2_ships[0]) or set(guess) & set(
-                    p2_ships[1]) or set(guess) & set(
-                    p2_ships[2]) or set(guess) & set(
-                    p2_ships[3]) or set(guess) & set(
-                    p2_ships[4])):
-                if (grid_p2[int(guess_row) - 1][column_names.index(guess_column) ] == "O"):
-                    print("You guessed that already!")
-                else:
-                    update_gridHit_p2(grid_p2, guess_row, guess_column)
-                    display_grid_p2(grid_p2, Columns)
-                    print("You've hit an enemy vessel!")
-                    p1_score += 1
-                    if p1_score == 17:
-                        print("\n" +
-                              "               )\n" +
-                              "            ( /(       )\n" +
-                              "            )\())(  ( /(\n" +
-                              "           ((_)\ )\ )\())\n" +
-                              "             ((_|(_|_))/\n" +
-                              "            | ¤   ¤   ¤ | __\n" +
-                              "    \----|----------------||--/\n" +
-                              "     \   o   o   o   o   o   /\n" +
-                              "\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n" +
-                              "\nPlayer 1, you are victorious!\nCongratulations!")
-                        sys.exit("Program ended")
-                    player = 2
-
-            else:
-                if (int(guess_row) < 0 or int(guess_row) > int(Rows)) or guess_column not in column_names:
-                    print("Outside the set grid. Please pick a number within it your Rows and Columns.")
-
-                elif (grid_p2[int(guess_row) - 1][column_names.index(guess_column) ] == "X"):
-                    print("You guessed that already.")
-
-                else:
-                    # Updates the grid with an "X" saying that you missed the ship
-                    print("You missed!")
-                    update_gridMiss_p2(grid_p2, guess_row, guess_column)
-                    display_grid_p2(grid_p2, Columns)
-                    player = 2
-
-        # checks quesses of p1
-        while player == 2:
-            print("\nPLAYER 02:")
-            guess_column = input("Which column do you guess? \n").upper()
-            if guess_column not in column_names:
-                sys.exit()
-            guess_row = input("Which row do you guess? \n")
-            try:
-                t = int(guess_row)
-            except BaseException:
-                sys.exit("Program ended")
-            guess = [guess_column + guess_row]
-
-            if bool(
-                set(guess) & set(
-                    p2_ships[0]) or set(guess) & set(
-                    p2_ships[1]) or set(guess) & set(
-                    p2_ships[2]) or set(guess) & set(
-                    p2_ships[3]) or set(guess) & set(
-                    p2_ships[4])):
-                if (grid_p1[int(guess_row) - 1][column_names.index(guess_column) ] == "O"):
-                    print("You guessed that already!")
-                else:
-                    update_gridHit_p1(grid_p1, guess_row, guess_column)
-                    display_grid_p1(grid_p1, Columns)
-                    print("You've hit an enemy vessel!")
-                    p2_score += 1
-                    if p2_score == 17:
-                        print("\n" +
-                              "               )\n" +
-                              "            ( /(       )\n" +
-                              "            )\())(  ( /(\n" +
-                              "           ((_)\ )\ )\())\n" +
-                              "             ((_|(_|_))/\n" +
-                              "            | ¤   ¤   ¤ | __\n" +
-                              "    \----|----------------||--/\n" +
-                              "     \   o   o   o   o   o   /\n" +
-                              "\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n" +
-                              "\nPlayer 2, you are victorious!\nCongratulations!")
-                        sys.exit("Program ended")
-                    player = 1
-
-            else:
-                if (int(guess_row) < 0 or int(guess_row) > int(Rows)) or guess_column not in column_names:
-                    print("Outside the set grid. Please pick a number within it your Rows and Columns.")
-
-                elif grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == "X":
-                    print("You guessed that already.")
+                if bool(
+                    set(guess) & set(
+                        p2_ships[0]) or set(guess) & set(
+                        p2_ships[1]) or set(guess) & set(
+                        p2_ships[2]) or set(guess) & set(
+                        p2_ships[3]) or set(guess) & set(
+                        p2_ships[4])):
+                    if (grid_p2[int(guess_row) - 1][column_names.index(guess_column) ] == "O"):
+                        print("You guessed that already!")
+                    else:
+                        update_gridHit_p2(grid_p2, guess_row, guess_column)
+                        display_grid_p2(grid_p2, Columns)
+                        print("You've hit an enemy vessel!")
+                        p1_score += 1
+                        if p1_score == 17:
+                            print("\n" +
+                                  "               )\n" +
+                                  "            ( /(       )\n" +
+                                  "            )\())(  ( /(\n" +
+                                  "           ((_)\ )\ )\())\n" +
+                                  "             ((_|(_|_))/\n" +
+                                  "            | ¤   ¤   ¤ | __\n" +
+                                  "    \----|----------------||--/\n" +
+                                  "     \   o   o   o   o   o   /\n" +
+                                  "\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n" +
+                                  "\nPlayer 1, you are victorious!\nCongratulations!")
+                            sys.exit("Program ended")
+                        player = 2
 
                 else:
-                    # Updates the grid with an "X" saying that you missed the ship
-                    print("You missed!")
-                    update_gridMiss_p1(grid_p1, guess_row, guess_column)
-                    display_grid_p1(grid_p1, Columns)
-                    player = 1
+                    if (int(guess_row) < 0 or int(guess_row) > int(Rows)) or guess_column not in column_names:
+                        print("Outside the set grid. Please pick a number within it your Rows and Columns.")
+
+                    elif (grid_p2[int(guess_row) - 1][column_names.index(guess_column) ] == "X"):
+                        print("You guessed that already.")
+
+                    else:
+                        # Updates the grid with an "X" saying that you missed the ship
+                        print("You missed!")
+                        update_gridMiss_p2(grid_p2, guess_row, guess_column)
+                        display_grid_p2(grid_p2, Columns)
+                        player = 2
+
+            # checks quesses of p1
+            while player == 2:
+                print("\nPLAYER 02:")
+                guess_column = input("Which column do you guess? \n").upper()
+                if guess_column not in column_names:
+                    sys.exit()
+                guess_row = input("Which row do you guess? \n")
+                try:
+                    t = int(guess_row)
+                except BaseException:
+                    sys.exit("Program ended")
+                guess = [guess_column + guess_row]
+
+                if bool(
+                    set(guess) & set(
+                        p2_ships[0]) or set(guess) & set(
+                        p2_ships[1]) or set(guess) & set(
+                        p2_ships[2]) or set(guess) & set(
+                        p2_ships[3]) or set(guess) & set(
+                        p2_ships[4])):
+                    if (grid_p1[int(guess_row) - 1][column_names.index(guess_column) ] == "O"):
+                        print("You guessed that already!")
+                    else:
+                        update_gridHit_p1(grid_p1, guess_row, guess_column)
+                        display_grid_p1(grid_p1, Columns)
+                        print("You've hit an enemy vessel!")
+                        p2_score += 1
+                        if p2_score == 17:
+                            print("\n" +
+                                  "               )\n" +
+                                  "            ( /(       )\n" +
+                                  "            )\())(  ( /(\n" +
+                                  "           ((_)\ )\ )\())\n" +
+                                  "             ((_|(_|_))/\n" +
+                                  "            | ¤   ¤   ¤ | __\n" +
+                                  "    \----|----------------||--/\n" +
+                                  "     \   o   o   o   o   o   /\n" +
+                                  "\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n" +
+                                  "\nPlayer 2, you are victorious!\nCongratulations!")
+                            sys.exit("Program ended")
+                        player = 1
+
+                else:
+                    if (int(guess_row) < 1 or int(guess_row) > int(Rows)) or guess_column not in column_names:
+                        print("Outside the set grid. Please pick a number within it your Rows and Columns.")
+
+                    elif grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == "X":
+                        print("You guessed that already.")
+
+                    else:
+                        # Updates the grid with an "X" saying that you missed the ship
+                        print("You missed!")
+                        update_gridMiss_p1(grid_p1, guess_row, guess_column)
+                        display_grid_p1(grid_p1, Columns)
+                        player = 1
+
+    if multiplayer == False:
+        print("Player 1 place your ships!")
+        p1_ships = shipcheck()
+        p2_ships = shipcheck(True)
+
+        player = 1  # battle phase
+        while True:
+            # checks quesses of p1
+            while player == 1:
+                print("\nPLAYER 01:")
+                guess_column = input("Which column do you guess? \n").upper()
+                if guess_column not in column_names:
+                    sys.exit()
+                guess_row = input("Which row do you guess? \n")
+                try:
+                    t = int(guess_row)
+                except BaseException:
+                    sys.exit("Program ended")
+                guess = [guess_column + guess_row]
+
+                if bool(
+                    set(guess) & set(
+                        p2_ships[0]) or set(guess) & set(
+                        p2_ships[1]) or set(guess) & set(
+                        p2_ships[2]) or set(guess) & set(
+                        p2_ships[3]) or set(guess) & set(
+                        p2_ships[4])):
+                    if (grid_p2[int(guess_row) - 1][column_names.index(guess_column) ] == "O"):
+                        print("You guessed that already!")
+                    else:
+                        update_gridHit_p2(grid_p2, guess_row, guess_column)
+                        display_grid_p2(grid_p2, Columns)
+                        print("You've hit an enemy vessel!")
+                        p1_score += 1
+                        if p1_score == 17:
+                            print("\n" +
+                                  "               )\n" +
+                                  "            ( /(       )\n" +
+                                  "            )\())(  ( /(\n" +
+                                  "           ((_)\ )\ )\())\n" +
+                                  "             ((_|(_|_))/\n" +
+                                  "            | ¤   ¤   ¤ | __\n" +
+                                  "    \----|----------------||--/\n" +
+                                  "     \   o   o   o   o   o   /\n" +
+                                  "\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n" +
+                                  "\nPlayer 1, you are victorious!\nCongratulations!")
+                            sys.exit("Program ended")
+                        player = 2
+
+                else:
+                    if (int(guess_row) < 0 or int(guess_row) > int(Rows)) or guess_column not in column_names:
+                        print("Outside the set grid. Please pick a number within it your Rows and Columns.")
+
+                    elif (grid_p2[int(guess_row) - 1][column_names.index(guess_column) ] == "X"):
+                        print("You guessed that already.")
+
+                    else:
+                        # Updates the grid with an "X" saying that you missed the ship
+                        print("You missed!")
+                        update_gridMiss_p2(grid_p2, guess_row, guess_column)
+                        display_grid_p2(grid_p2, Columns)
+                        player = 2
+
+            # checks quesses of p1
+            while player == 2:
+                guess_column = random.choice(column_names)
+                if guess_column not in column_names:
+                    sys.exit()
+                guess_row = str(randint(1, 10))
+                guess = [guess_column + guess_row]
+
+                if bool(
+                    set(guess) & set(
+                        p2_ships[0]) or set(guess) & set(
+                        p2_ships[1]) or set(guess) & set(
+                        p2_ships[2]) or set(guess) & set(
+                        p2_ships[3]) or set(guess) & set(
+                        p2_ships[4])):
+                    if (grid_p1[int(guess_row) - 1][column_names.index(guess_column) ] == "O"):
+                        continue
+                    else:
+                        update_gridHit_p1(grid_p1, guess_row, guess_column)
+                        display_grid_p1(grid_p1, Columns)
+                        p2_score += 1
+                        if p2_score == 17:
+                            print("\n" +
+                                  "               )\n" +
+                                  "            ( /(       )\n" +
+                                  "            )\())(  ( /(\n" +
+                                  "           ((_)\ )\ )\())\n" +
+                                  "             ((_|(_|_))/\n" +
+                                  "            | ¤   ¤   ¤ | __\n" +
+                                  "    \----|----------------||--/\n" +
+                                  "     \   o   o   o   o   o   /\n" +
+                                  "\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n" +
+                                  "\nPlayer 2, you are victorious!\nCongratulations!")
+                            sys.exit("Program ended")
+                        player = 1
+
+                else:
+                    if grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == "X":
+                        continue
+
+                    else:
+                        # Updates the grid with an "X" saying that you missed the ship
+                        update_gridMiss_p1(grid_p1, guess_row, guess_column)
+                        display_grid_p1(grid_p1, Columns)
+                        player = 1
 
 
 def b_help():
@@ -378,7 +506,11 @@ def game_init():
     while True:
         start = input("\nPress P to play, H for help or Q to exit!\n")
         if start.lower() == "p":
-            b_start()
+            game_players = input("Single Player or Multiplayer?").lower()
+            if game_players == "s":
+                b_start(False)
+            elif game_players == "m":
+                b_start()
         elif start.lower() == "h":
             b_help()
             continue
