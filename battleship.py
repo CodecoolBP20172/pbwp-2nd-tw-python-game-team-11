@@ -43,7 +43,9 @@ def b_start(multiplayer=True):
 
     def display_grid_p1(grid_p1, Columns):
         #  shows grid of p1
-        print("\nBOARD OF PLAYER 01:")
+        blue = '\033[34m'  # water
+        white = '\033[0m'  # normal
+        print(blue + "\n╔═╗╦  ╔═╗╦ ╦╔═╗╦═╗" + white + "┌─┐┬" + blue + "\n╠═╝║  ╠═╣╚╦╝║╣ ╠╦╝" + white + "│ ││" + blue + "\n╩  ╩═╝╩ ╩ ╩ ╚═╝╩╚═" + white + "└─┘┴")
         column_names = 'ABCDEFGHIJ'[:Columns]
         print('   | ' + ' | '.join(column_names) + ' |')
         for number, row in enumerate(grid_p1):
@@ -56,7 +58,9 @@ def b_start(multiplayer=True):
 
     def display_grid_p2(grid_p2, Columns):
         #  shows grid of p2
-        print("\nBOARD OF PLAYER 02:")
+        blue = '\033[34m'  # water
+        white = '\033[0m'  # normal
+        print(blue + "\n╔═╗╦  ╔═╗╦ ╦╔═╗╦═╗" + white + "┌─┐┌─┐" + blue + "\n╠═╝║  ╠═╣╚╦╝║╣ ╠╦╝" + white + "│ │┌─┘" + blue + "\n╩  ╩═╝╩ ╩ ╩ ╚═╝╩╚═" + white + "└─┘└─┘")
         column_names = 'ABCDEFGHIJ'[:Columns]
         print('   | ' + ' | '.join(column_names) + ' |')
         for number, row in enumerate(grid_p2):
@@ -310,24 +314,30 @@ def b_start(multiplayer=True):
                     p2_ships[3]) or set(guess) & set(
                     p2_ships[4])):
                 if (grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == "O"):
-                    print("You guessed that already!")
+                    yellow = '\033[33m'  # ascii
+                    white = '\033[0m'  # normal
+                    print(yellow + "You guessed that already!" + white)
                 else:
+                    blue = '\033[34m'  # water
+                    red = '\033[31m'  # logo
+                    yellow = '\033[33m'  # ascii
+                    white = '\033[0m'  # normal
                     update_gridHit_p2(grid_p2, guess_row, guess_column)
                     display_grid_p2(grid_p2, Columns)
-                    print("You've hit an enemy vessel!")
+                    print(red + " __________ /)  you have hit\n(__________((>    an enemy\n            \)     vessel" + white)
                     p1_score += 1
                     if p1_score == 17 and (Rows * Columns) > 63 or p1_score == 12 and (Rows * Columns) < 64:
-                        print("\n" +
+                        print(yellow + "\n" +
                               "               )\n" +
                               "            ( /(       )\n" +
                               "            )\())(  ( /(\n" +
                               "           ((_)\ )\ )\())\n" +
-                              "             ((_|(_|_))/\n" +
+                              "             ((_|(_|_))/\n" + " " + red +
                               "            | ¤   ¤   ¤ | __\n" +
                               "    \----|----------------||--/\n" +
-                              "     \   o   o   o   o   o   /\n" +
+                              "     \   o   o   o   o   o   /\n" + " " + blue +
                               "\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n" +
-                              "\nPlayer 1, you are victorious!\nCongratulations!")
+                              "\nPlayer 1, you are victorious!\nCongratulations!" + white)
                         sys.exit("Program ended")
                     player = 2
 
@@ -336,13 +346,17 @@ def b_start(multiplayer=True):
                     print("Outside the set grid. Please pick a number within it your Rows and Columns.")
 
                 elif (grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == "X"):
-                    print("You guessed that already.")
+                    yellow = '\033[33m'  # ascii
+                    white = '\033[0m'  # normal
+                    print(yellow + "You guessed that already." + white)
 
                 else:
                     # Updates the grid with an "X" saying that you missed the ship
-                    print("You missed!")
+                    blue = '\033[34m'  # water
+                    white = '\033[0m'  # normal
                     update_gridMiss_p2(grid_p2, guess_row, guess_column)
                     display_grid_p2(grid_p2, Columns)
+                    print(blue + "You missed!" + white)
                     player = 2
 
             # checks quesses of p1
@@ -372,24 +386,30 @@ def b_start(multiplayer=True):
                         p1_ships[3]) or set(guess) & set(
                         p1_ships[4])):
                     if (grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == "O"):
-                        print("You guessed that already!")
+                        yellow = '\033[33m'  # ascii
+                        white = '\033[0m'  # normal
+                        print(yellow + "You guessed that already!" + white)
                     else:
+                        blue = '\033[34m'  # water
+                        red = '\033[31m'  # logo
+                        yellow = '\033[33m'  # ascii
+                        white = '\033[0m'  # normal
                         update_gridHit_p1(grid_p1, guess_row, guess_column)
                         display_grid_p1(grid_p1, Columns)
-                        print("You've hit an enemy vessel!")
+                        print(red + " __________ /)  you have hit\n(__________((>    an enemy\n            \)     vessel" + white)
                         p2_score += 1
                         if p2_score == 17 and (Rows * Columns) > 63 or p2_score == 12 and (Rows * Columns) < 64:
-                            print("\n" +
+                            print(yellow + "\n" +
                                   "               )\n" +
                                   "            ( /(       )\n" +
                                   "            )\())(  ( /(\n" +
                                   "           ((_)\ )\ )\())\n" +
-                                  "             ((_|(_|_))/\n" +
+                                  "             ((_|(_|_))/\n" + " " + red +
                                   "            | ¤   ¤   ¤ | __\n" +
                                   "    \----|----------------||--/\n" +
-                                  "     \   o   o   o   o   o   /\n" +
+                                  "     \   o   o   o   o   o   /\n" + " " + blue +
                                   "\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n" +
-                                  "\nPlayer 2, you are victorious!\nCongratulations!")
+                                  "\nPlayer 1, you are victorious!\nCongratulations!" + white)
                             sys.exit("Program ended")
                         player = 1
 
@@ -398,13 +418,17 @@ def b_start(multiplayer=True):
                         print("Outside the set grid. Please pick a number within it your Rows and Columns.")
 
                     elif grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == "X":
-                        print("You guessed that already.")
+                        yellow = '\033[33m'  # ascii
+                        white = '\033[0m'  # normal
+                        print(yellow + "You guessed that already." + white)
 
                     else:
                         # Updates the grid with an "X" saying that you missed the ship
-                        print("You missed!")
+                        blue = '\033[34m'  # water
+                        white = '\033[0m'  # normal
                         update_gridMiss_p1(grid_p1, guess_row, guess_column)
                         display_grid_p1(grid_p1, Columns)
+                        print(blue + "You missed!" + white)
                         player = 1
 
     if multiplayer is False:
@@ -441,24 +465,30 @@ def b_start(multiplayer=True):
                         p2_ships[3]) or set(guess) & set(
                         p2_ships[4])):
                     if (grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == "O"):
-                        print("You guessed that already!")
+                        yellow = '\033[33m'  # ascii
+                        white = '\033[0m'  # normal
+                        print(yellow + "You guessed that already!" + white)
                     else:
+                        blue = '\033[34m'  # water
+                        red = '\033[31m'  # logo
+                        yellow = '\033[33m'  # ascii
+                        white = '\033[0m'  # normal
                         update_gridHit_p2(grid_p2, guess_row, guess_column)
                         display_grid_p2(grid_p2, Columns)
-                        print("You've hit an enemy vessel!")
+                        print(red + " __________ /)  you have hit\n(__________((>    an enemy\n            \)     vessel" + white)
                         p1_score += 1
                         if p1_score == 17 and (Rows * Columns) > 63 or p1_score == 12 and (Rows * Columns) < 64:
-                            print("\n" +
+                            print(yellow + "\n" +
                                   "               )\n" +
                                   "            ( /(       )\n" +
                                   "            )\())(  ( /(\n" +
                                   "           ((_)\ )\ )\())\n" +
-                                  "             ((_|(_|_))/\n" +
+                                  "             ((_|(_|_))/\n" + " " + red +
                                   "            | ¤   ¤   ¤ | __\n" +
                                   "    \----|----------------||--/\n" +
-                                  "     \   o   o   o   o   o   /\n" +
+                                  "     \   o   o   o   o   o   /\n" + " " + blue +
                                   "\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n" +
-                                  "\nPlayer 1, you are victorious!\nCongratulations!")
+                                  "\nPlayer 1, you are victorious!\nCongratulations!" + white)
                             sys.exit("Program ended")
                         time.sleep(0.5)
                         print("\nArtificial Unintelligence is thinking...")
@@ -470,13 +500,17 @@ def b_start(multiplayer=True):
                         print("Outside the set grid. Please pick a number within it your Rows and Columns.")
 
                     elif (grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == "X"):
-                        print("You guessed that already.")
+                        yellow = '\033[33m'  # ascii
+                        white = '\033[0m'  # normal
+                        print(yellow + "You guessed that already." + white)
 
                     else:
                         # Updates the grid with an "X" saying that you missed the ship
-                        print("You missed!")
+                        blue = '\033[34m'  # water
+                        white = '\033[0m'  # normal
                         update_gridMiss_p2(grid_p2, guess_row, guess_column)
                         display_grid_p2(grid_p2, Columns)
+                        print(blue + "You missed!" + white)
                         time.sleep(0.5)
                         print("\nArtificial Unintelligence is thinking...")
                         time.sleep(0.5)
@@ -504,17 +538,17 @@ def b_start(multiplayer=True):
                         display_grid_p1(grid_p1, Columns)
                         p2_score += 1
                         if p2_score == 17 and (Rows * Columns) > 63 or p2_score == 12 and (Rows * Columns) < 64:
-                            print("\n" +
+                            print(yellow + "\n" +
                                   "               )\n" +
                                   "            ( /(       )\n" +
                                   "            )\())(  ( /(\n" +
                                   "           ((_)\ )\ )\())\n" +
-                                  "             ((_|(_|_))/\n" +
+                                  "             ((_|(_|_))/\n" + " " + red +
                                   "            | ¤   ¤   ¤ | __\n" +
                                   "    \----|----------------||--/\n" +
-                                  "     \   o   o   o   o   o   /\n" +
+                                  "     \   o   o   o   o   o   /\n" + " " + blue +
                                   "\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n" +
-                                  "\nPlayer 2, you are victorious!\nCongratulations!")
+                                  "\nPlayer 1, you are victorious!\nCongratulations!" + white)
                             sys.exit("Program ended")
                         player = 1
 
