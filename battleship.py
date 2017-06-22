@@ -45,10 +45,12 @@ def b_start(multiplayer=True):
         #  shows grid of p1
         print("\nBOARD OF PLAYER 01:")
         column_names = 'ABCDEFGHIJ'[:Columns]
-        print('  | ' + ' | '.join(column_names) + ' |')
+        print('   | ' + ' | '.join(column_names) + ' |')
         for number, row in enumerate(grid_p1):
-            print(number + 1, '| ' + ' | '.join(row) + ' |')
-
+            if number < 9:
+                print(number + 1, ' | ' + ' | '.join(row) + ' |')
+            else:
+                print(number + 1, '| ' + ' | '.join(row) + ' |')
     grid_p1 = create_grid_p1(Rows, Columns)
     display_grid_p1(grid_p1, Columns)
 
@@ -56,24 +58,26 @@ def b_start(multiplayer=True):
         #  shows grid of p2
         print("\nBOARD OF PLAYER 02:")
         column_names = 'ABCDEFGHIJ'[:Columns]
-        print('  | ' + ' | '.join(column_names) + ' |')
+        print('   | ' + ' | '.join(column_names) + ' |')
         for number, row in enumerate(grid_p2):
-            print(number + 1, '| ' + ' | '.join(row) + ' |')
-
+            if number < 9:
+                print(number + 1, ' | ' + ' | '.join(row) + ' |')
+            else:
+                print(number + 1, '| ' + ' | '.join(row) + ' |')
     grid_p2 = create_grid_p2(Rows, Columns)
     display_grid_p2(grid_p2, Columns)
 
     def update_gridHit_p1(grid_p1, guess_row, guess_column):
-        grid_p1[int(guess_row)-1][column_names.index(guess_column)] = 'O'
+        grid_p1[int(guess_row)-1][column_names.index(guess_column)] = (red + 'O' + white)
 
     def update_gridMiss_p1(grid_p1, guess_row, guess_column):
-        grid_p1[int(guess_row)-1][column_names.index(guess_column)] = 'X'
+        grid_p1[int(guess_row)-1][column_names.index(guess_column)] = (blue + 'X' + white)
 
     def update_gridHit_p2(grid_p2, guess_row, guess_column):
-        grid_p2[int(guess_row)-1][column_names.index(guess_column)] = 'O'
+        grid_p2[int(guess_row)-1][column_names.index(guess_column)] = (red + 'O' + white)
 
     def update_gridMiss_p2(grid_p2, guess_row, guess_column):
-        grid_p2[int(guess_row)-1][column_names.index(guess_column)] = 'X'
+        grid_p2[int(guess_row)-1][column_names.index(guess_column)] = (blue + 'X' + white)
 
     def ship_placement_AI(shiptype):  # ship placement
         while True:
@@ -312,7 +316,7 @@ def b_start(multiplayer=True):
                     display_grid_p2(grid_p2, Columns)
                     print("You've hit an enemy vessel!")
                     p1_score += 1
-                    if p1_score == 17:
+                    if p1_score == 17 and (Rows * Columns) > 63 or p1_score == 12 and (Rows * Columns) < 64:
                         print("\n" +
                               "               )\n" +
                               "            ( /(       )\n" +
@@ -374,7 +378,7 @@ def b_start(multiplayer=True):
                         display_grid_p1(grid_p1, Columns)
                         print("You've hit an enemy vessel!")
                         p2_score += 1
-                        if p2_score == 17:
+                        if p2_score == 17 and (Rows * Columns) > 63 or p2_score == 12 and (Rows * Columns) < 64:
                             print("\n" +
                                   "               )\n" +
                                   "            ( /(       )\n" +
@@ -443,7 +447,7 @@ def b_start(multiplayer=True):
                         display_grid_p2(grid_p2, Columns)
                         print("You've hit an enemy vessel!")
                         p1_score += 1
-                        if p1_score == 17:
+                        if p1_score == 17 and (Rows * Columns) > 63 or p1_score == 12 and (Rows * Columns) < 64:
                             print("\n" +
                                   "               )\n" +
                                   "            ( /(       )\n" +
@@ -456,6 +460,9 @@ def b_start(multiplayer=True):
                                   "\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\n" +
                                   "\nPlayer 1, you are victorious!\nCongratulations!")
                             sys.exit("Program ended")
+                        time.sleep(0.5)
+                        print("\nArtificial Unintelligence is thinking...")
+                        time.sleep(0.5)
                         player = 2
 
                 else:
@@ -470,18 +477,18 @@ def b_start(multiplayer=True):
                         print("You missed!")
                         update_gridMiss_p2(grid_p2, guess_row, guess_column)
                         display_grid_p2(grid_p2, Columns)
+                        time.sleep(0.5)
+                        print("\nArtificial Unintelligence is thinking...")
+                        time.sleep(0.5)
                         player = 2
 
             # checks quesses of p1
             while player == 2:
-                print("Artificial Unintelligence is thinking...")
-                time.sleep(1)
                 guess_column = random.choice(column_names[0:Columns])
                 if guess_column not in column_names:
                     sys.exit()
                 guess_row = str(randint(1, Rows))
                 guess = [guess_column + guess_row]
-                print(guess)
 
                 if bool(
                     set(guess) & set(
@@ -496,7 +503,7 @@ def b_start(multiplayer=True):
                         update_gridHit_p1(grid_p1, guess_row, guess_column)
                         display_grid_p1(grid_p1, Columns)
                         p2_score += 1
-                        if p2_score == 17:
+                        if p2_score == 17 and (Rows * Columns) > 63 or p2_score == 12 and (Rows * Columns) < 64:
                             print("\n" +
                                   "               )\n" +
                                   "            ( /(       )\n" +
@@ -537,7 +544,12 @@ def b_help():
 
 
 def game_init():
-    print("\nWELCOME TO\n╔╗ ╔═╗╔╦╗╔╦╗╦  ╔═╗╔═╗╦ ╦╦╔═╗\n╠╩╗╠═╣ ║  ║ ║  ║╣ ╚═╗╠═╣║╠═╝\n╚═╝╩ ╩ ╩  ╩ ╩═╝╚═╝╚═╝╩ ╩╩╩ ")
+    blue = '\033[34m'  # water
+    red = '\033[31m'  # logo
+    yellow = '\033[33m'  # ascii
+    white = '\033[0m'  # normal
+    print("\nWELCOME TO")
+    print(blue + "\n╔╗ ╔═╗╔╦╗╔╦╗╦  ╔═╗╔═╗╦ ╦╦╔═╗\n" + white + "╠╩╗╠═╣ ║  ║ ║  ║╣ ╚═╗╠═╣║╠═╝\n" + blue + "╚═╝╩ ╩ ╩  ╩ ╩═╝╚═╝╚═╝╩ ╩╩╩ " + white)
     while True:
         start = input("\nPress P to play, H for help or Q to exit!\n")
         if start.lower() == "p":
