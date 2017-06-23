@@ -354,7 +354,7 @@ def b_start(multiplayer=True):
                     p2_ships[2]) or set(guess) & set(
                     p2_ships[3]) or set(guess) & set(
                     p2_ships[4])):
-                if (grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == "O"):
+                if (grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == (red + 'O' + white)):
                     yellow = '\033[33m'  # ascii
                     white = '\033[0m'  # normal
                     print(yellow + "You guessed that already!" + white)
@@ -388,7 +388,7 @@ def b_start(multiplayer=True):
                 if (int(guess_row) < 0 or int(guess_row) > int(Rows)) or guess_column not in column_names:
                     print("Outside the set grid. Please pick a number within it your Rows and Columns.")
 
-                elif (grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == "X"):
+                elif (grid_p2[int(guess_row) - 1][column_names.index(guess_column)+1] == (blue + 'X' + white)):
                     yellow = '\033[33m'  # ascii
                     white = '\033[0m'  # normal
                     print(yellow + "You guessed that already." + white)
@@ -428,7 +428,7 @@ def b_start(multiplayer=True):
                         p1_ships[2]) or set(guess) & set(
                         p1_ships[3]) or set(guess) & set(
                         p1_ships[4])):
-                    if (grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == "O"):
+                    if grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == (red + 'O' + white):
                         yellow = '\033[33m'  # ascii
                         white = '\033[0m'  # normal
                         print(yellow + "You guessed that already!" + white)
@@ -462,7 +462,7 @@ def b_start(multiplayer=True):
                     if (int(guess_row) < 1 or int(guess_row) > int(Rows)) or guess_column not in column_names:
                         print("Outside the set grid. Please pick a number within it your Rows and Columns.")
 
-                    elif grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == "X":
+                    elif grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == (blue + 'X' + white):
                         yellow = '\033[33m'  # ascii
                         white = '\033[0m'  # normal
                         print(yellow + "You guessed that already." + white)
@@ -509,7 +509,7 @@ def b_start(multiplayer=True):
                         p2_ships[2]) or set(guess) & set(
                         p2_ships[3]) or set(guess) & set(
                         p2_ships[4])):
-                    if grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == "O":
+                    if grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == (red + 'O' + white):
                         print(yellow + "You guessed that already!" + white)
                     else:
                         update_gridHit_p2(grid_p2, guess_row, guess_column)
@@ -540,7 +540,7 @@ def b_start(multiplayer=True):
                     if (int(guess_row) < 0 or int(guess_row) > int(Rows)) or guess_column not in column_names:
                         print("Outside the set grid. Please pick a number within it your Rows and Columns.")
 
-                    elif grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == "X":
+                    elif grid_p2[int(guess_row) - 1][column_names.index(guess_column)] == (blue + 'X' + white):
                         yellow = '\033[33m'  # ascii
                         white = '\033[0m'  # normal
                         print(yellow + "You guessed that already." + white)
@@ -572,7 +572,7 @@ def b_start(multiplayer=True):
                         p1_ships[2]) or set(guess) & set(
                         p1_ships[3]) or set(guess) & set(
                         p1_ships[4])):
-                    if (grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == "O"):
+                    if (grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == (red + 'O' + white)):
                         continue
                     else:
                         update_gridHit_p1(grid_p1, guess_row, guess_column)
@@ -594,7 +594,7 @@ def b_start(multiplayer=True):
                         player = 1
 
                 else:
-                    if grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == "X":
+                    if grid_p1[int(guess_row) - 1][column_names.index(guess_column)] == (blue + 'X' + white):
                         continue
 
                     else:
